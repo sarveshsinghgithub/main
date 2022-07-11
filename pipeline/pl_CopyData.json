@@ -1,0 +1,38 @@
+{
+	"name": "pl_CopyData",
+	"properties": {
+		"description": "copy data from azure source blob storage to target blob storage",
+		"activities": [
+			{
+				"name": "DF_Practice",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF_Practice",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "FileProcess"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-07-08T17:19:44Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

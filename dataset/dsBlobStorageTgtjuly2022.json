@@ -1,0 +1,23 @@
+{
+	"name": "dsBlobStorageTgtjuly2022",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BlobStorageTargetJuly2022",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "targetfiles"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
