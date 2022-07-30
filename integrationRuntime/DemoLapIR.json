@@ -1,0 +1,7 @@
+{
+	"name": "DemoLapIR",
+	"properties": {
+		"type": "SelfHosted",
+		"description": "This integration service runtime is configured on my private laptop"
+	}
+}
