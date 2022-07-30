@@ -1,0 +1,9 @@
+{
+	"name": "PracticeADFsarvesh",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "25b15b9d-10ac-4adb-93f7-f172a86b57ef",
+		"tenantId": "6f77d598-7415-4917-9a72-7352f9e8cc08"
+	}
+}
