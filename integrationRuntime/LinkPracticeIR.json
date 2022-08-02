@@ -1,0 +1,12 @@
+{
+	"name": "LinkPracticeIR",
+	"properties": {
+		"type": "SelfHosted",
+		"typeProperties": {
+			"linkedInfo": {
+				"resourceId": "/subscriptions/5a69fe17-8477-497a-89f2-426a09e52a17/resourcegroups/Practice/providers/Microsoft.DataFactory/factories/PracticeADFsarvesh/integrationruntimes/PracticeIR",
+				"authorizationType": "Rbac"
+			}
+		}
+	}
+}
