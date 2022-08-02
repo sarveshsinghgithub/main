@@ -1,0 +1,21 @@
+{
+	"name": "ds_XML",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LSPractice",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DS_Practice"
+		},
+		"annotations": [],
+		"type": "Xml",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "book.xml",
+				"container": "source"
+			}
+		}
+	}
+}
