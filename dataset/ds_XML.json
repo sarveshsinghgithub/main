@@ -13,7 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "book.xml",
+				"fileName": "book.xsd",
 				"container": "source"
 			}
 		}
