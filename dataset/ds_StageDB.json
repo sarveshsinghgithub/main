@@ -23,7 +23,8 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "Employee"
+			"schema": "dbo",
+			"table": "Employee"
 		}
 	}
 }
