@@ -1,5 +1,5 @@
 {
-	"name": "ds_Parameter",
+	"name": "ds_SourceDB",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LSSourceDB",
