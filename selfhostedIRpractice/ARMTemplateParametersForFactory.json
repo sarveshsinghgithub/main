@@ -1,0 +1,12 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "selfhostedIRpractice"
+		},
+		"LinkPracticeIR_properties_typeProperties_linkedInfo_resourceId": {
+			"value": "/subscriptions/5a69fe17-8477-497a-89f2-426a09e52a17/resourcegroups/Practice/providers/Microsoft.DataFactory/factories/PracticeADFsarvesh/integrationruntimes/PracticeIR"
+		}
+	}
+}
