@@ -1,0 +1,26 @@
+{
+	"name": "ds_Parameter",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LSSourceDB",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"dbSource": {
+					"value": "@dataset().dsSourceDB",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"dsSourceDB": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "DS_Practice"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
