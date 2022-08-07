@@ -3,13 +3,28 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LSStageDB",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"dbStage": {
+					"value": "@dataset().StageDB",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"StageDB": {
+				"type": "string"
+			}
 		},
 		"folder": {
 			"name": "DS_Practice"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Authors"
+		}
 	}
 }
