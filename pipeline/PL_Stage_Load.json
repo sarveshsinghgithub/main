@@ -430,7 +430,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select * from publisher",
+						"sqlReaderQuery": "select * from publishers",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},

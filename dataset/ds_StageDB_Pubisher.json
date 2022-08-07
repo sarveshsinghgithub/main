@@ -24,7 +24,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "Publisher"
+			"table": "Publishers"
 		}
 	}
 }
