@@ -1,0 +1,15 @@
+{
+	"name": "ds_StageDB_Author",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LSStageDB",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DS_Practice"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
