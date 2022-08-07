@@ -102,6 +102,18 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "PL_CD_Load_Roysched",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_CD_Load_Sales",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"policy": {
@@ -527,6 +539,67 @@
 				"outputs": [
 					{
 						"referenceName": "ds_StageDB_Roysched",
+						"type": "DatasetReference",
+						"parameters": {
+							"StageDB": {
+								"value": "@pipeline().parameters.StageDB",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "PL_CD_Load_Sales",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select * from sales",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_SourceDB",
+						"type": "DatasetReference",
+						"parameters": {
+							"dsSourceDB": {
+								"value": "@pipeline().parameters.SourceDb",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_StageDB_Sales",
 						"type": "DatasetReference",
 						"parameters": {
 							"StageDB": {
