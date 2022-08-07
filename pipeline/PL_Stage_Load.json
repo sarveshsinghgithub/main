@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "PL_Load_Employee",
+				"name": "PL_CD_Load_Employee",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -68,13 +68,19 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "PL_Load_Employee",
+						"activity": "PL_CD_Load_Employee",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "PL_Load_Author",
+						"activity": "PL_CD_Load_Author",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_CD_Load_Discounts",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -147,7 +153,7 @@
 				}
 			},
 			{
-				"name": "PL_Load_Author",
+				"name": "PL_CD_Load_Author",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -204,6 +210,62 @@
 								"type": "Expression"
 							}
 						}
+					}
+				]
+			},
+			{
+				"name": "PL_CD_Load_Discounts",
+				"description": "Load discount data",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "Select * from Discounts",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_SourceDB",
+						"type": "DatasetReference",
+						"parameters": {
+							"dsSourceDB": {
+								"value": "@pipeline().parameters.SourceDb",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_StageDB_Discounts",
+						"type": "DatasetReference"
 					}
 				]
 			}
