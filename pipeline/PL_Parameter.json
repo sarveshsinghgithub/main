@@ -62,6 +62,83 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "sp_Update",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "PL_Load_Employee",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[SP_SUPDATE_RUN_DETAILS]",
+					"storedProcedureParameters": {
+						"ADF_RUN_ID": {
+							"value": {
+								"value": "@pipeline().RunId",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"ADF_Run_Name": {
+							"value": {
+								"value": "@pipeline().Pipeline",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"ADF_Run_Status": {
+							"value": {
+								"value": "@pipeline().TriggerType",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"ADF_Run_Status_Desc": {
+							"value": {
+								"value": "@pipeline()?.TriggeredByPipelineName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"ADF_Run_Start_Time": {
+							"value": {
+								"value": "@pipeline().TriggerTime",
+								"type": "Expression"
+							},
+							"type": "Datetime"
+						},
+						"ADF_Run_End_Time": {
+							"value": {
+								"value": "@pipeline().TriggerTime",
+								"type": "Expression"
+							},
+							"type": "Datetime"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LSControDB",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"COntrolDB": {
+							"value": "@pipeline().parameters.ControlDB",
+							"type": "Expression"
+						}
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -69,6 +146,9 @@
 				"type": "string"
 			},
 			"StageDB": {
+				"type": "string"
+			},
+			"ControlDB": {
 				"type": "string"
 			}
 		},
