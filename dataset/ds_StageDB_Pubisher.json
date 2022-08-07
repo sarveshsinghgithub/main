@@ -1,0 +1,30 @@
+{
+	"name": "ds_StageDB_Pubisher",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LSStageDB",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"dbStage": {
+					"value": "@dataset().StageDB",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"StageDB": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "DS_Practice"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Publisher"
+		}
+	}
+}
