@@ -1,0 +1,26 @@
+{
+	"name": "ds_ControlDB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LSControDB",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"COntrolDB": {
+					"value": "@dataset().ControlDB",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"ControlDB": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "DS_Practice"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
