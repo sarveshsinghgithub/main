@@ -1,0 +1,438 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name"
+		},
+		"LSControDB": {
+			"type": "string"
+		},
+		"LSSourceDB": {
+			"type": "string"
+		},
+		"LSStageDB": {
+			"type": "string"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Stage_Load')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "PL_CD_Load_Employee",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select * from employee",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "Truncate table employee",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_SourceDB",
+								"type": "DatasetReference",
+								"parameters": {
+									"dsSourceDB": {
+										"value": "@pipeline().parameters.SourceDb",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_StageDB_Employee",
+								"type": "DatasetReference",
+								"parameters": {
+									"StageDB": {
+										"value": "@pipeline().parameters.StageDB",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "sp_Update",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "PL_CD_Load_Employee",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_CD_Load_Author",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_CD_Load_Discounts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[SP_SUPDATE_RUN_DETAILS]",
+							"storedProcedureParameters": {
+								"ADF_RUN_ID": {
+									"value": {
+										"value": "@pipeline().RunId",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"ADF_Run_Name": {
+									"value": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"ADF_Run_Status": {
+									"value": {
+										"value": "@pipeline().TriggerType",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"ADF_Run_Status_Desc": {
+									"value": {
+										"value": "@pipeline().DataFactory",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"ADF_Run_Start_Time": {
+									"value": {
+										"value": "@pipeline().TriggerTime",
+										"type": "Expression"
+									},
+									"type": "Datetime"
+								},
+								"ADF_Run_End_Time": {
+									"value": {
+										"value": "@pipeline().TriggerTime",
+										"type": "Expression"
+									},
+									"type": "Datetime"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "[parameters('LSControDB')]",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"COntrolDB": {
+									"value": "@pipeline().parameters.ControlDB",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "PL_CD_Load_Author",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "Select * From authors",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "Truncate table authors",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_SourceDB",
+								"type": "DatasetReference",
+								"parameters": {
+									"dsSourceDB": {
+										"value": "@pipeline().parameters.SourceDb",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_StageDB_Author",
+								"type": "DatasetReference",
+								"parameters": {
+									"StageDB": {
+										"value": "@pipeline().parameters.StageDB",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "PL_CD_Load_Discounts",
+						"description": "Load discount data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "Select * from Discounts",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_SourceDB",
+								"type": "DatasetReference",
+								"parameters": {
+									"dsSourceDB": {
+										"value": "@pipeline().parameters.SourceDb",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_StageDB_Discounts",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"parameters": {
+					"SourceDb": {
+						"type": "string"
+					},
+					"StageDB": {
+						"type": "string"
+					},
+					"ControlDB": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "PL_Practice"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_SourceDB')]",
+				"[concat(variables('factoryId'), '/datasets/ds_StageDB_Employee')]",
+				"[concat(variables('factoryId'), '/datasets/ds_StageDB_Author')]",
+				"[concat(variables('factoryId'), '/datasets/ds_StageDB_Discounts')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_SourceDB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('LSSourceDB')]",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"dbSource": {
+							"value": "@dataset().dsSourceDB",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"dsSourceDB": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "DS_Practice"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_StageDB_Employee')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('LSStageDB')]",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"dbStage": {
+							"value": "@dataset().StageDB",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"StageDB": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "DS_Practice"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Employee"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_StageDB_Author')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('LSStageDB')]",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"dbStage": {
+							"value": "@dataset().StageDB",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"StageDB": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "DS_Practice"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Authors"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_StageDB_Discounts')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('LSStageDB')]",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DS_Practice"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Discounts"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
