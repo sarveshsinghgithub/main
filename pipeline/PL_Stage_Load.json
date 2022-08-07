@@ -235,9 +235,9 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
+						"preCopyScript": "truncate table discounts",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false,
-						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
@@ -265,7 +265,13 @@
 				"outputs": [
 					{
 						"referenceName": "ds_StageDB_Discounts",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"StageDB": {
+								"value": "@pipeline().parameters.StageDB",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
